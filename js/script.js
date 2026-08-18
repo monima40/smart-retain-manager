@@ -3643,3 +3643,28 @@ function updateAdminName() {
     }
 }
 
+// ================= BACKEND API =================
+
+async function loadProductsFromDatabase() {
+    try {
+        const response = await fetch("backend/api/products.php");
+
+        const result = await response.json();
+
+        console.log("Products from database:", result);
+
+        if (!result.success) {
+            console.error("Database error:", result.message);
+            return;
+        }
+
+        console.log("Products loaded:", result.data);
+
+    } catch (error) {
+        console.error("Failed to load products:", error);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    loadProductsFromDatabase();
+});
