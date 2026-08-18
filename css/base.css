@@ -1,0 +1,152 @@
+/* ==========================================
+   SMART RETAIL BUSINESS MANAGER
+   Design system: deep navy + antique gold
+   Display: Sora  |  Body: Inter  |  Data: JetBrains Mono
+   ========================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap');
+
+:root {
+
+    /* --- Brand --- */
+    --primary: #16274D;
+    --primary-dark: #0A1730;
+    --primary-light: #EEF2FA;
+    --primary-bright: #2F52A0;
+
+    /* --- Signature accent (antique gold) --- */
+    --accent: #C9A227;
+    --accent-dark: #A9840F;
+    --accent-light: #FBF3DA;
+
+    /* --- Surfaces --- */
+    --background: #bec8e1;
+    
+    --card: #FFFFFF;
+
+    /* --- Text --- */
+    --text: #141B2D;
+    --text-light: #64708A;
+    --text-faint: #99A2B8;
+
+    /* --- Structure --- */
+    --border: #E5E9F2;
+    --border-soft: #EFF2F8;
+
+    /* --- Status --- */
+    --success: #1B9C6E;
+    --success-light: #E4F7EF;
+    --danger: #E2483F;
+    --danger-light: #FCEAE8;
+    --warning: #DA9A0B;
+    --warning-light: #FBF1DA;
+    --info: #2D6CDF;
+    --info-light: #E9F0FE;
+
+    /* --- Elevation --- */
+    --shadow-sm: 0 1px 2px rgba(20, 27, 45, 0.04);
+    --shadow: 0 8px 24px rgba(20, 27, 45, 0.06), 0 1px 2px rgba(20, 27, 45, 0.04);
+    --shadow-lg: 0 20px 45px rgba(20, 27, 45, 0.12);
+    --shadow-gold: 0 10px 25px rgba(201, 162, 39, 0.25);
+
+    /* --- Radius --- */
+    --r-sm: 8px;
+    --r-md: 12px;
+    --r-lg: 16px;
+    --r-xl: 20px;
+
+    /* legacy aliases kept for compatibility with older markup/JS references */
+    --success: #1B9C6E;
+    --green: #1B9C6E;
+    --green-light: #E4F7EF;
+    --red: #E2483F;
+    --red-light: #FCEAE8;
+    --orange: #DA9A0B;
+    --orange-light: #FBF1DA;
+    --blue: #2D6CDF;
+    --blue-light: #E9F0FE;
+    --shadow: 0 8px 24px rgba(20, 27, 45, 0.06), 0 1px 2px rgba(20, 27, 45, 0.04);
+
+}
+
+/* ==========================================
+   RESET
+   ========================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+::selection {
+    background: var(--accent-light);
+    color: var(--primary-dark);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+
+    font-family: 'Inter', Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+
+    background:
+        radial-gradient(circle at 0% 0%, #F8F5EA 0%, transparent 42%),
+        var(--background);
+
+    color: var(--text);
+
+    -webkit-font-smoothing: antialiased;
+
+}
+
+h1, h2, h3 {
+    font-family: 'Sora', 'Inter', sans-serif;
+    letter-spacing: -0.01em;
+    color: var(--primary);
+}
+
+/* numeric emphasis wherever big figures appear */
+.stat-card h2,
+.mini-card strong,
+.report-card strong,
+.profit-circle strong,
+.profit-info strong,
+.stock-number,
+.break-number strong,
+.break-result strong,
+.total-box strong,
+.grand-total strong,
+td strong,
+#page-title {
+    font-family: 'JetBrains Mono', 'Sora', monospace;
+    letter-spacing: -0.02em;
+}
+
+/* thin custom scrollbar */
+::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: #D3D9E6;
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+}
+
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+

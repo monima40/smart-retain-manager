@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Smart Retail Business Manager - Purchase</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/pages.css">
+    <link rel="stylesheet" href="css/pages.css">
+
+    <script src="js/auth.js"></script>   <!-- ADD THIS LINE -->
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="...">
+    <!-- Icons -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+<!-- ================= SIDEBAR ================= -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+        <div class="logo-icon">
+            <i class="fa-solid fa-store"></i>
+        </div>
+
+        <div>
+            <h2>Smart Retail</h2>
+            <span>Business Manager</span>
+        </div>
+    </div>
+
+
+    <nav class="sidebar-menu">
+
+        <p class="menu-title">MAIN MENU</p>
+
+        <a href="dashboard.html" class="nav-link" data-page="dashboard">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <a href="products.html" class="nav-link" data-page="products">
+            <i class="fa-solid fa-box"></i>
+            <span>Products</span>
+        </a>
+
+        <a href="categories.html" class="nav-link" data-page="categories">
+            <i class="fa-solid fa-layer-group"></i>
+            <span>Categories</span>
+        </a>
+
+        <a href="suppliers.html" class="nav-link" data-page="suppliers">
+            <i class="fa-solid fa-truck"></i>
+            <span>Suppliers</span>
+        </a>
+
+        <a href="purchase.html" class="nav-link active" data-page="purchase">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span>Purchase</span>
+        </a>
+
+        <a href="sales.html" class="nav-link" data-page="sales">
+            <i class="fa-solid fa-cash-register"></i>
+            <span>Sells</span>
+        </a>
+
+        <a href="reports.html" class="nav-link" data-page="reports">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>Reports</span>
+        </a>
+
+        <a href="settings.html" class="nav-link" data-page="settings">
+            <i class="fa-solid fa-gear"></i>
+            <span>Settings</span>
+        </a>
+
+        <p class="menu-title">TRANSACTIONS</p>
+
+        <p class="menu-title">ANALYSIS</p>
+
+    </nav>
+
+
+    <div class="sidebar-bottom">
+
+        <div class="help-box">
+            <i class="fa-solid fa-lightbulb"></i>
+
+            <div>
+                <strong>Business Tip</strong>
+                <p>Keep your stock updated to avoid shortages.</p>
+            </div>
+        </div>
+
+        <div class="user-profile">
+<div class="avatar" id="adminAvatar">
+    A
+</div>
+            <div>
+                <strong id="sidebarAdminName">Admin</strong>
+
+                <small>Business Owner</small>
+            </div>
+
+            <!-- <i class="fa-solid fa-ellipsis"></i> -->
+     <i class="fa-solid fa-right-from-bracket" style="cursor:pointer" onclick="logout()" title="Log out"></i>
+        </div>
+
+    </div>
+
+</aside>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="main-content">
+
+    <!-- HEADER -->
+
+    <header class="top-header">
+
+        <div class="mobile-menu">
+            <i class="fa-solid fa-bars"></i>
+        </div>
+
+        <div class="page-heading">
+
+            <h1 id="page-title">Purchase</h1>
+
+            <p id="page-subtitle">
+                Record products purchased from suppliers.
+            </p>
+
+        </div>
+
+
+        <div class="header-right">
+
+            <div class="search-box">
+
+                <i class="fa-solid fa-search"></i>
+
+                <input
+                    type="text"
+                    id="globalSearch"
+                    placeholder="Search..."
+                >
+
+            </div>
+
+
+            <button class="notification-btn">
+
+                <i class="fa-regular fa-bell"></i>
+
+                <span>3</span>
+
+            </button>
+
+
+            <div class="header-avatar">
+                A
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- ================= PAGE CONTENT ================= -->
+
+    <section id="page-container">
+
+        <div class="page" id="purchase-page">
+
+            <div class="section-header">
+
+                <div>
+
+                    <h2>Purchase</h2>
+
+                    <p>
+                        Record products purchased from suppliers.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="transaction-layout">
+
+                <div class="form-card">
+
+                    <h3>New Purchase</h3>
+
+                    <form id="purchaseForm">
+
+                        <div class="form-group">
+
+                            <label>Supplier</label>
+
+                            <select id="purchaseSupplier" required>
+                                <option value="">Select Supplier</option>
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>Product</label>
+
+                            <select id="purchaseProduct" required>
+                                <option value="">Select Product</option>
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-row">
+
+                            <div class="form-group">
+
+                                <label>Quantity</label>
+
+                                <input
+                                    type="number"
+                                    id="purchaseQuantity"
+                                    min="1"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>Purchase Price</label>
+
+                                <input
+                                    type="number"
+                                    id="purchasePrice"
+                                    min="0"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <!--  added payment -->
+
+                        <div class="form-group">
+
+                            <label>Payment Method</label>
+
+                            <select id="paymentMethod">
+
+                                <option>Cash</option>
+                                 <option>bKash</option> 
+                                <option>Card</option> 
+                                <option>Other</option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="total-box">
+
+                            <span>Total Purchase Cost</span>
+
+                            <strong id="purchaseTotal">
+                                ৳ 0
+                            </strong>
+
+                        </div>
+
+
+                        <button class="primary-btn full-btn">
+
+                            <i class="fa-solid fa-check"></i>
+
+                            Complete Purchase
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+
+                <div class="info-card">
+
+                    <div class="info-icon">
+                        <i class="fa-solid fa-circle-info"></i>
+                    </div>
+
+                    <h3>Purchase Information</h3>
+
+                    <p>
+                        When you record a purchase, the product stock
+                        will automatically increase.
+                    </p>
+
+                    <div class="info-list">
+
+                        <div>
+                            <i class="fa-solid fa-check"></i>
+                            Stock automatically updated
+                        </div>
+
+                        <div>
+                            <i class="fa-solid fa-check"></i>
+                            Purchase cost recorded
+                        </div>
+
+                        <div>
+                            <i class="fa-solid fa-check"></i>
+                            Supplier history maintained
+                        </div>
+
+                    </div>
+
+                    <!-- Payment Information -->
+<div class="payment-info">
+
+    <br>
+    <h4>Payment Information</h4>
+    <br>
+
+    <!-- bKash -->
+    <div class="payment-account">
+
+        <strong>bKash</strong>
+
+        <p>
+            <span>Account Name:</span>
+            Samia Rahman
+        </p>
+
+        <p>
+            <span>Account Number:</span>
+            01727497501
+        </p>
+
+    </div>
+
+    <!-- Bank -->
+    <div class="payment-account">
+
+        <strong>Bank</strong>
+
+        <p>
+            <span>Account Name:</span>
+            Nushrath Jahan Monima
+        </p>
+
+        <p>
+            <span>Account Number:</span>
+            1234567890
+        </p>
+
+        <p>
+            <span>Branch:</span>
+            Sylhet
+        </p>
+
+    </div>
+
+</div>
+
+                </div>
+
+            </div>
+
+
+            <div class="table-card">
+
+                <div class="table-top">
+
+                    <h3>Recent Purchases</h3>
+
+                </div>
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Date</th>
+                                <th>Supplier</th>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Total</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="purchaseTable"></tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+<!-- JAVASCRIPT -->
+
+<script src="js/data.js"></script>
+<script src="js/navigation.js"></script>
+<script src="js/modals.js"></script>
+<script src="js/products.js"></script>
+<script src="js/categories.js"></script>
+<script src="js/suppliers.js"></script>
+<script src="js/purchase.js"></script>
+<script src="js/sales.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/reports.js"></script>
+<script src="js/search.js"></script>
+<script src="js/notifications.js"></script>
+<script src="js/settings.js"></script>
+<script src="js/main.js"></script>
+
+</body>
+</html>
