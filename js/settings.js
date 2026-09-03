@@ -146,4 +146,3 @@ function updateAdminName() {
             adminName.charAt(0).toUpperCase();
     }
 }
-

@@ -1,222 +1,891 @@
 /* ============================================================
-   DATA.JS — core data arrays, localStorage persistence, helpers
-   ============================================================ */
+   DATA.JS
+   Smart Retail Business Manager
+   MySQL + PHP API Connection
+============================================================ */
+
 
 /* =========================================================
-   1. DATA
+   1. API CONFIGURATION
 ========================================================= */
 
-
-
-let products = [
-    {
-        id: 1,
-        name: "Rice 5kg",
-        category: "Grocery",
-        purchasePrice: 550,
-        sellingPrice: 650,
-        stock: 25,
-        minimumStock: 10
-    },
-    {
-        id: 2,
-        name: "Soybean Oil 1L",
-        category: "Grocery",
-        purchasePrice: 160,
-        sellingPrice: 190,
-        stock: 8,
-        minimumStock: 10
-    },
-    {
-        id: 3,
-        name: "Milk 1L",
-        category: "Dairy",
-        purchasePrice: 75,
-        sellingPrice: 95,
-        stock: 15,
-        minimumStock: 5
-    },
-    {
-        id: 4,
-        name: "Biscuits",
-        category: "Snacks",
-        purchasePrice: 30,
-        sellingPrice: 45,
-        stock: 4,
-        minimumStock: 10
-    },
-    {
-        id: 5,
-        name: "Shampoo",
-        category: "Personal Care",
-        purchasePrice: 220,
-        sellingPrice: 280,
-        stock: 18,
-        minimumStock: 5
-    }
-];
-
-let readNotifications = [];
-
-let categories = [
-    { id: 1, name: "Grocery" },
-    { id: 2, name: "Dairy" },
-    { id: 3, name: "Snacks" },
-    { id: 4, name: "Personal Care" }
-];
-
-let suppliers = [
-    {
-        id: 1,
-        name: "ABC Wholesale",
-        phone: "01711111111",
-        email: "abc@gmail.com",
-        address: "Sylhet"
-    },
-    {
-        id: 2,
-        name: "Rahman Traders",
-        phone: "01822222222",
-        email: "rahman@gmail.com",
-        address: "Sylhet"
-    },
-    {
-        id: 3,
-        name: "City Distribution",
-        phone: "01933333333",
-        email: "city@gmail.com",
-        address: "Dhaka"
-    }
-];
-
-let sales = [
-    {
-        id: 1,
-        date: "17 Aug 2026",
-        customer: "Rahim",
-        phone: "",
-        product: "Rice 5kg",
-        quantity: 2,
-        total: 1300,
-        profit: 200,
-        payment: "Cash"
-    },
-    {
-        id: 2,
-        date: "17 Aug 2026",
-        customer: "Karim",
-        phone: "",
-        product: "Milk 1L",
-        quantity: 3,
-        total: 285,
-        profit: 60,
-        payment: "bKash"
-    }
-];
-
-let purchases = [
-    {
-        id: 1,
-        date: "16 Aug 2026",
-        supplier: "ABC Wholesale",
-        product: "Rice 5kg",
-        quantity: 20,
-        price: 550,
-        total: 11000
-    }
-];
+const API_BASE = "./backend/api";
 
 
 /* =========================================================
-   1B. LOCAL STORAGE PERSISTENCE
-   Keeps data in sync across the separate HTML pages.
-   (Same idea already used for "businessInfo" below —
-   just extended to every data list.)
+   2. MAIN DATA ARRAYS
+========================================================= */
+
+let products = [];
+let categories = [];
+let suppliers = [];
+let sales = [];
+let purchases = [];
+let customers = [];
+let readNotifications = [];
+
+
+/* =========================================================
+   3. STORAGE KEYS
 ========================================================= */
 
 const STORAGE_KEYS = {
-    products: "srm_products",
-    categories: "srm_categories",
-    suppliers: "srm_suppliers",
-    sales: "srm_sales",
-    purchases: "srm_purchases",
-    readNotifications: "srm_readNotifications"
+
+    readNotifications:
+        "srm_readNotifications",
+
+    businessInfo:
+        "businessInfo"
+
 };
-
-function loadAllData() {
-    try {
-        const savedProducts = localStorage.getItem(STORAGE_KEYS.products);
-        const savedCategories = localStorage.getItem(STORAGE_KEYS.categories);
-        const savedSuppliers = localStorage.getItem(STORAGE_KEYS.suppliers);
-        const savedSales = localStorage.getItem(STORAGE_KEYS.sales);
-        const savedPurchases = localStorage.getItem(STORAGE_KEYS.purchases);
-        const savedReadNotifications = localStorage.getItem(STORAGE_KEYS.readNotifications);
-
-        if (savedProducts) products = JSON.parse(savedProducts);
-        if (savedCategories) categories = JSON.parse(savedCategories);
-        if (savedSuppliers) suppliers = JSON.parse(savedSuppliers);
-        if (savedSales) sales = JSON.parse(savedSales);
-        if (savedPurchases) purchases = JSON.parse(savedPurchases);
-        if (savedReadNotifications) readNotifications = JSON.parse(savedReadNotifications);
-    } catch (e) {
-        console.error("Could not load saved data, using defaults.", e);
-    }
-}
-
-function saveAllData() {
-    try {
-        localStorage.setItem(STORAGE_KEYS.products, JSON.stringify(products));
-        localStorage.setItem(STORAGE_KEYS.categories, JSON.stringify(categories));
-        localStorage.setItem(STORAGE_KEYS.suppliers, JSON.stringify(suppliers));
-        localStorage.setItem(STORAGE_KEYS.sales, JSON.stringify(sales));
-        localStorage.setItem(STORAGE_KEYS.purchases, JSON.stringify(purchases));
-        localStorage.setItem(STORAGE_KEYS.readNotifications, JSON.stringify(readNotifications));
-    } catch (e) {
-        console.error("Could not save data.", e);
-    }
-}
-
-/* Load saved data (if any) right away, before any page renders */
-loadAllData();
 
 
 /* =========================================================
-   2. BASIC HELPERS
+   4. API GET HELPER
+========================================================= */
+
+async function apiGet(file) {
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_BASE}/${file}`
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                `HTTP Error: ${response.status}`
+            );
+
+        }
+
+
+        const result =
+            await response.json();
+
+
+        if (!result.success) {
+
+            throw new Error(
+                result.message ||
+                "API request failed"
+            );
+
+        }
+
+
+        console.log(
+            `${file} API response:`,
+            result.data
+        );
+
+
+        return result.data || [];
+
+    }
+    catch (error) {
+
+        console.error(
+            `API Error: ${file}`,
+            error
+        );
+
+
+        return [];
+
+    }
+
+}
+
+
+/* =========================================================
+   5. LOAD PRODUCTS
+========================================================= */
+
+async function loadProductsFromDatabase() {
+
+    const data =
+        await apiGet(
+            "products.php"
+        );
+
+
+    products =
+        data.map(product => ({
+
+            id:
+                Number(
+                    product.product_id
+                ),
+
+            name:
+                product.product_name ||
+                "",
+
+            category:
+                product.category_name ||
+                "",
+
+            purchasePrice:
+                Number(
+                    product.purchase_price ||
+                    0
+                ),
+
+            sellingPrice:
+                Number(
+                    product.selling_price ||
+                    0
+                ),
+
+            stock:
+                Number(
+                    product.stock_quantity ||
+                    0
+                ),
+
+            minimumStock:
+                Number(
+                    product.low_stock_limit ||
+                    0
+                )
+
+        }));
+
+
+    console.log(
+        "PRODUCTS FROM MYSQL:",
+        products
+    );
+
+}
+
+
+/* =========================================================
+   6. LOAD CATEGORIES
+========================================================= */
+
+async function loadCategoriesFromDatabase() {
+
+    const data =
+        await apiGet(
+            "categories.php"
+        );
+
+
+    categories =
+        data.map(category => ({
+
+            id:
+                Number(
+                    category.category_id
+                ),
+
+            name:
+                category.category_name ||
+                ""
+
+        }));
+
+
+    console.log(
+        "CATEGORIES FROM MYSQL:",
+        categories
+    );
+
+}
+
+
+/* =========================================================
+   7. LOAD SUPPLIERS
+========================================================= */
+
+async function loadSuppliersFromDatabase() {
+
+    const data =
+        await apiGet(
+            "suppliers.php"
+        );
+
+
+    suppliers =
+        data.map(supplier => ({
+
+            id:
+                Number(
+                    supplier.supplier_id
+                ),
+
+            name:
+                supplier.supplier_name ||
+                "",
+
+            phone:
+                supplier.phone ||
+                "",
+
+            email:
+                supplier.email ||
+                "",
+
+            address:
+                supplier.address ||
+                ""
+
+        }));
+
+
+    console.log(
+        "SUPPLIERS FROM MYSQL:",
+        suppliers
+    );
+
+}
+
+
+/* =========================================================
+   8. LOAD CUSTOMERS
+========================================================= */
+
+async function loadCustomersFromDatabase() {
+
+    const data =
+        await apiGet(
+            "customer.php"
+        );
+
+
+    customers =
+        data.map(customer => ({
+
+            id:
+                Number(
+                    customer.customer_id
+                ),
+
+            name:
+                customer.customer_name ||
+                "",
+
+            phone:
+                customer.phone ||
+                ""
+
+        }));
+
+
+    console.log(
+        "CUSTOMERS FROM MYSQL:",
+        customers
+    );
+
+}
+
+
+/* =========================================================
+   9. LOAD PURCHASES
+========================================================= */
+
+async function loadPurchasesFromDatabase() {
+
+    const data =
+        await apiGet(
+            "purchases.php"
+        );
+
+
+    purchases =
+        data.map(purchase => ({
+
+            id:
+                Number(
+                    purchase.purchase_id
+                ),
+
+            date:
+                purchase.purchase_date ||
+                "",
+
+            supplier:
+                purchase.supplier_name ||
+                "",
+
+            total:
+                Number(
+                    purchase.total_amount ||
+                    0
+                )
+
+        }));
+
+
+    console.log(
+        "PURCHASES FROM MYSQL:",
+        purchases
+    );
+
+}
+
+
+/* =========================================================
+   10. LOAD SALES
+========================================================= */
+
+async function loadSalesFromDatabase() {
+
+    const data =
+        await apiGet(
+            "sales.php"
+        );
+
+
+    sales =
+        data.map(sale => ({
+
+            id:
+                Number(
+                    sale.sale_id
+                ),
+
+            date:
+                sale.sale_date ||
+                "",
+
+            customer:
+                sale.customer_name ||
+                "",
+
+            phone:
+                sale.phone ||
+                "",
+
+            product:
+                sale.product_name ||
+                "",
+
+            quantity:
+                Number(
+                    sale.quantity ||
+                    0
+                ),
+
+            subtotal:
+                Number(
+                    sale.subtotal ||
+                    0
+                ),
+
+            discount:
+                Number(
+                    sale.discount ||
+                    0
+                ),
+
+            total:
+                Number(
+                    sale.total_amount ||
+                    0
+                ),
+
+            profit:
+                Number(
+                    sale.profit ||
+                    0
+                ),
+
+            payment:
+                sale.payment_method ||
+                "Cash"
+
+        }));
+
+
+    console.log(
+        "SALES FROM MYSQL:",
+        sales
+    );
+
+}
+
+
+/* =========================================================
+   11. NOTIFICATIONS
+========================================================= */
+
+function loadReadNotifications() {
+
+    try {
+
+        const saved =
+            localStorage.getItem(
+                STORAGE_KEYS.readNotifications
+            );
+
+
+        if (saved) {
+
+            readNotifications =
+                JSON.parse(
+                    saved
+                );
+
+        }
+
+    }
+    catch (error) {
+
+        console.error(
+            "Could not load notification data.",
+            error
+        );
+
+
+        readNotifications = [];
+
+    }
+
+}
+
+
+/* =========================================================
+   12. SAVE NOTIFICATIONS
+========================================================= */
+
+function saveReadNotifications() {
+
+    try {
+
+        localStorage.setItem(
+
+            STORAGE_KEYS.readNotifications,
+
+            JSON.stringify(
+                readNotifications
+            )
+
+        );
+
+    }
+    catch (error) {
+
+        console.error(
+            "Could not save notification data.",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   13. LOAD ALL DATABASE DATA
+========================================================= */
+
+async function loadAllDataFromDatabase() {
+
+    console.log(
+        "===================================="
+    );
+
+
+    console.log(
+        "Connecting Smart Retail to MySQL..."
+    );
+
+
+    console.log(
+        "===================================="
+    );
+
+
+    await Promise.all([
+
+        loadProductsFromDatabase(),
+
+        loadCategoriesFromDatabase(),
+
+        loadSuppliersFromDatabase(),
+
+        loadCustomersFromDatabase(),
+
+        loadPurchasesFromDatabase(),
+
+        loadSalesFromDatabase()
+
+    ]);
+
+
+    loadReadNotifications();
+
+
+    console.log(
+        "===================================="
+    );
+
+
+    console.log(
+        "DATABASE LOAD COMPLETE"
+    );
+
+
+    console.log(
+        "Products:",
+        products.length
+    );
+
+
+    console.log(
+        "Categories:",
+        categories.length
+    );
+
+
+    console.log(
+        "Suppliers:",
+        suppliers.length
+    );
+
+
+    console.log(
+        "Customers:",
+        customers.length
+    );
+
+
+    console.log(
+        "Purchases:",
+        purchases.length
+    );
+
+
+    console.log(
+        "Sales:",
+        sales.length
+    );
+
+
+    console.log(
+        "===================================="
+    );
+
+}
+
+
+/* =========================================================
+   14. MONEY HELPER
 ========================================================= */
 
 function money(value) {
-    return "৳ " + Number(value || 0).toLocaleString();
+
+    return (
+        "৳ " +
+        Number(
+            value || 0
+        ).toLocaleString()
+    );
+
 }
+
+
+/* =========================================================
+   15. TODAY
+========================================================= */
 
 function today() {
-    return new Date().toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric"
-    });
+
+    return new Date().toLocaleDateString(
+        "en-GB",
+        {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        }
+    );
+
 }
+
+
+/* =========================================================
+   16. GET PRODUCT
+========================================================= */
 
 function getProductById(id) {
-    return products.find(p => Number(p.id) === Number(id));
+
+    return products.find(
+        product =>
+            Number(product.id) ===
+            Number(id)
+    );
+
 }
+
+
+/* =========================================================
+   17. GET SUPPLIER
+========================================================= */
 
 function getSupplierById(id) {
-    return suppliers.find(s => Number(s.id) === Number(id));
+
+    return suppliers.find(
+        supplier =>
+            Number(supplier.id) ===
+            Number(id)
+    );
+
 }
 
-function showToast(message, type = "success") {
-    document.querySelector(".toast")?.remove();
 
-    const toast = document.createElement("div");
-    toast.className = "toast";
-    toast.textContent = message;
+/* =========================================================
+   18. GET CUSTOMER
+========================================================= */
+
+function getCustomerById(id) {
+
+    return customers.find(
+        customer =>
+            Number(customer.id) ===
+            Number(id)
+    );
+
+}
+
+
+/* =========================================================
+   19. TOAST
+========================================================= */
+
+function showToast(
+    message,
+    type = "success"
+) {
+
+    document
+        .querySelector(".toast")
+        ?.remove();
+
+
+    const toast =
+        document.createElement(
+            "div"
+        );
+
+
+    toast.className =
+        "toast";
+
+
+    toast.textContent =
+        message;
+
 
     if (type === "error") {
-        toast.style.background = "#dc2626";
+
+        toast.style.background =
+            "#dc2626";
+
     }
 
-    document.body.appendChild(toast);
 
-    setTimeout(() => toast.remove(), 2500);
+    document.body.appendChild(
+        toast
+    );
+
+
+    setTimeout(
+        () => toast.remove(),
+        2500
+    );
+
 }
 
+
+/* =========================================================
+   20. BUSINESS INFORMATION
+========================================================= */
+
+function loadBusinessInfo() {
+
+    try {
+
+        const saved =
+            localStorage.getItem(
+                STORAGE_KEYS.businessInfo
+            );
+
+
+        if (!saved) {
+            return;
+        }
+
+
+        const info =
+            JSON.parse(saved);
+
+
+        const adminName =
+            document.getElementById(
+                "adminName"
+            );
+
+
+        const phone =
+            document.getElementById(
+                "businessPhone"
+            );
+
+
+        const email =
+            document.getElementById(
+                "businessEmail"
+            );
+
+
+        const address =
+            document.getElementById(
+                "businessAddress"
+            );
+
+
+        if (adminName) {
+
+            adminName.value =
+                info.adminName ||
+                "";
+
+        }
+
+
+        if (phone) {
+
+            phone.value =
+                info.phone ||
+                "";
+
+        }
+
+
+        if (email) {
+
+            email.value =
+                info.email ||
+                "";
+
+        }
+
+
+        if (address) {
+
+            address.value =
+                info.address ||
+                "";
+
+        }
+
+    }
+    catch (error) {
+
+        console.error(
+            "Could not load business information.",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   21. SAVE BUSINESS INFORMATION
+========================================================= */
+
+function saveBusinessInfoData(
+    adminName,
+    phone,
+    email,
+    address
+) {
+
+    localStorage.setItem(
+
+        STORAGE_KEYS.businessInfo,
+
+        JSON.stringify({
+
+            adminName:
+                adminName || "",
+
+            phone:
+                phone || "",
+
+            email:
+                email || "",
+
+            address:
+                address || ""
+
+        })
+
+    );
+
+}
+
+
+/* =========================================================
+   22. START APPLICATION
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    async function () {
+
+        console.log(
+            "Smart Retail frontend started."
+        );
+
+
+        loadBusinessInfo();
+
+
+        await loadAllDataFromDatabase();
+
+
+        if (
+            typeof updateAll ===
+            "function"
+        ) {
+
+            updateAll();
+
+        }
+
+
+        if (
+            typeof calculatePurchase ===
+            "function"
+        ) {
+
+            calculatePurchase();
+
+        }
+
+
+        if (
+            typeof updateSaleCalculation ===
+            "function"
+        ) {
+
+            updateSaleCalculation();
+
+        }
+
+
+        console.log(
+            "Smart Retail connected to MySQL successfully."
+        );
+
+    }
+);

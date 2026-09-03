@@ -13,17 +13,21 @@ $sql = "SELECT
 $result = $conn->query($sql);
 
 if (!$result) {
+
     echo json_encode([
         "success" => false,
         "message" => $conn->error
     ]);
+
     exit;
 }
 
 $categories = [];
 
 while ($row = $result->fetch_assoc()) {
+
     $categories[] = $row;
+
 }
 
 echo json_encode([

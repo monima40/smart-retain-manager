@@ -335,6 +335,118 @@
 <script src="js/notifications.js"></script>
 <script src="js/settings.js"></script>
 <script src="js/main.js"></script>
+<script>
+function searchSuppliers(text) {
 
+    text = text.toLowerCase().trim();
+
+    const container =
+        document.getElementById("supplierList");
+
+    if (!container) return;
+
+    if (!text) {
+
+        renderSuppliers();
+
+        return;
+    }
+
+    const filtered =
+        suppliers.filter(function(supplier) {
+
+            return (
+                String(supplier.name || "")
+                    .toLowerCase()
+                    .includes(text) ||
+
+                String(supplier.phone || "")
+                    .toLowerCase()
+                    .includes(text) ||
+
+                String(supplier.email || "")
+                    .toLowerCase()
+                    .includes(text) ||
+
+                String(supplier.address || "")
+                    .toLowerCase()
+                    .includes(text)
+            );
+
+        });
+
+
+    container.innerHTML = "";
+
+
+    if (filtered.length === 0) {
+
+        container.innerHTML = `
+            <div style="
+                grid-column: 1 / -1;
+                padding: 30px;
+                text-align: center;
+                color: #6b7280;
+            ">
+                No suppliers found.
+            </div>
+        `;
+
+        return;
+    }
+
+
+    filtered.forEach(function(supplier) {
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "supplier-card";
+
+        const name =
+            supplier.name || "Unknown Supplier";
+
+        card.innerHTML = `
+
+            <div class="supplier-top">
+
+                <div class="supplier-avatar">
+                    ${name.charAt(0).toUpperCase()}
+                </div>
+
+                <div>
+                    <h3>${name}</h3>
+                    <span>Supplier</span>
+                </div>
+
+            </div>
+
+            <div class="supplier-info">
+
+                <p>
+                    <i class="fa-solid fa-phone"></i>
+                    ${supplier.phone || "No phone"}
+                </p>
+
+                <p>
+                    <i class="fa-solid fa-envelope"></i>
+                    ${supplier.email || "No email"}
+                </p>
+
+                <p>
+                    <i class="fa-solid fa-location-dot"></i>
+                    ${supplier.address || "No address"}
+                </p>
+
+            </div>
+        `;
+
+        container.appendChild(card);
+
+    });
+
+}
+</script>
 </body>
 </html>

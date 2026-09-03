@@ -4,7 +4,7 @@ require_once "../config/database.php";
 
 header("Content-Type: application/json");
 
-$sql = "SELECT
+$sql = "SELECT 
             p.product_id,
             p.product_name,
             c.category_name,
@@ -20,17 +20,21 @@ $sql = "SELECT
 $result = $conn->query($sql);
 
 if (!$result) {
+
     echo json_encode([
         "success" => false,
         "message" => $conn->error
     ]);
+
     exit;
 }
 
 $products = [];
 
 while ($row = $result->fetch_assoc()) {
+
     $products[] = $row;
+
 }
 
 echo json_encode([

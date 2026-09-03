@@ -6,36 +6,60 @@ header("Content-Type: application/json");
 
 $sql = "SELECT
             s.sale_id,
+            s.customer_id,
             c.customer_name,
             c.phone,
+            s.product_id,
+            p.product_name,
+            s.quantity,
             s.sale_date,
             s.subtotal,
             s.discount,
             s.total_amount,
-            s.profit
+            s.profit,
+            s.payment_method
+
         FROM sales s
+
         JOIN customers c
-        ON s.customer_id = c.customer_id
+            ON s.customer_id = c.customer_id
+
+        JOIN products p
+            ON s.product_id = p.product_id
+
         ORDER BY s.sale_id DESC";
+
 
 $result = $conn->query($sql);
 
+
 if (!$result) {
+
     echo json_encode([
         "success" => false,
         "message" => $conn->error
     ]);
+
     exit;
 }
 
+
 $sales = [];
 
+
 while ($row = $result->fetch_assoc()) {
+
     $sales[] = $row;
+
 }
+
 
 echo json_encode([
     "success" => true,
     "data" => $sales
 ]);
+
+
+$conn->close();
+
 ?>

@@ -1,5 +1,12 @@
 /* =========================================================
-   13. SALES CALCULATION
+   SALES.JS
+   Smart Retail Business Manager
+   MySQL + PHP API
+========================================================= */
+
+
+/* =========================================================
+   1. SALES CALCULATION
 ========================================================= */
 
 function updateSaleCalculation() {
@@ -11,6 +18,7 @@ function updateSaleCalculation() {
             )?.value
         );
 
+
     const quantity =
         Number(
             document.getElementById(
@@ -18,12 +26,14 @@ function updateSaleCalculation() {
             )?.value
         ) || 0;
 
+
     const discount =
         Number(
             document.getElementById(
                 "salesDiscount"
             )?.value
         ) || 0;
+
 
     const product =
         getProductById(productId);
@@ -34,20 +44,24 @@ function updateSaleCalculation() {
             "saleUnitPrice"
         );
 
+
     const subtotalEl =
         document.getElementById(
             "saleSubtotal"
         );
+
 
     const discountEl =
         document.getElementById(
             "saleDiscount"
         );
 
+
     const totalEl =
         document.getElementById(
             "saleTotal"
         );
+
 
     const profitEl =
         document.getElementById(
@@ -55,44 +69,26 @@ function updateSaleCalculation() {
         );
 
 
-    /* -----------------------------
-       NO PRODUCT SELECTED
-    ----------------------------- */
-
     if (!product) {
 
-        if (unitPrice) {
-            unitPrice.textContent =
-                money(0);
-        }
+        if (unitPrice)
+            unitPrice.textContent = money(0);
 
-        if (subtotalEl) {
-            subtotalEl.textContent =
-                money(0);
-        }
+        if (subtotalEl)
+            subtotalEl.textContent = money(0);
 
-        if (discountEl) {
-            discountEl.textContent =
-                money(discount);
-        }
+        if (discountEl)
+            discountEl.textContent = money(discount);
 
-        if (totalEl) {
-            totalEl.textContent =
-                money(0);
-        }
+        if (totalEl)
+            totalEl.textContent = money(0);
 
-        if (profitEl) {
-            profitEl.textContent =
-                money(0);
-        }
+        if (profitEl)
+            profitEl.textContent = money(0);
 
         return;
     }
 
-
-    /* -----------------------------
-       CALCULATIONS
-    ----------------------------- */
 
     const subtotal =
         product.sellingPrice *
@@ -106,26 +102,12 @@ function updateSaleCalculation() {
         );
 
 
-    /*
-       Profit =
-       Selling price - Purchase price
-       - Discount
-    */
-
     const profit =
-        Math.max(
-            0,
-            (
-                product.sellingPrice -
-                product.purchasePrice
-            ) * quantity -
-            discount
-        );
+        (
+            product.sellingPrice -
+            product.purchasePrice
+        ) * quantity - discount;
 
-
-    /* -----------------------------
-       DISPLAY RESULTS
-    ----------------------------- */
 
     if (unitPrice) {
 
@@ -133,6 +115,7 @@ function updateSaleCalculation() {
             money(
                 product.sellingPrice
             );
+
     }
 
 
@@ -140,6 +123,7 @@ function updateSaleCalculation() {
 
         subtotalEl.textContent =
             money(subtotal);
+
     }
 
 
@@ -147,6 +131,7 @@ function updateSaleCalculation() {
 
         discountEl.textContent =
             money(discount);
+
     }
 
 
@@ -154,6 +139,7 @@ function updateSaleCalculation() {
 
         totalEl.textContent =
             money(total);
+
     }
 
 
@@ -161,12 +147,14 @@ function updateSaleCalculation() {
 
         profitEl.textContent =
             money(profit);
+
     }
+
 }
 
 
 /* =========================================================
-   SALES INPUT EVENTS
+   2. INPUT EVENTS
 ========================================================= */
 
 document
@@ -193,25 +181,20 @@ document
     );
 
 
-
 /* =========================================================
-   14. SALES FORM
+   3. SALES FORM
 ========================================================= */
 
 document
     .getElementById("salesForm")
     ?.addEventListener(
         "submit",
-        function (e) {
+        async function (e) {
 
             e.preventDefault();
 
 
-            /* -----------------------------
-               GET FORM DATA
-            ----------------------------- */
-
-            const customer =
+            const customerName =
                 document
                     .getElementById(
                         "customerName"
@@ -253,7 +236,7 @@ document
                 ) || 0;
 
 
-            const payment =
+            const paymentMethod =
                 document.getElementById(
                     "paymentMethod"
                 ).value;
@@ -265,11 +248,11 @@ document
                 );
 
 
-            /* -----------------------------
+            /* =========================
                VALIDATION
-            ----------------------------- */
+            ========================= */
 
-            if (!customer) {
+            if (!customerName) {
 
                 showToast(
                     "Please enter customer name.",
@@ -332,7 +315,7 @@ document
             if (discount > subtotal) {
 
                 showToast(
-                    "Discount cannot be greater than the subtotal.",
+                    "Discount cannot be greater than subtotal.",
                     "error"
                 );
 
@@ -340,113 +323,263 @@ document
             }
 
 
-            /* -----------------------------
-               TOTAL
-            ----------------------------- */
+            /* =================================================
+               IMPORTANT:
+               FIND CUSTOMER IN MYSQL
+            ================================================= */
 
-            const total =
-                subtotal - discount;
-
-
-            /* -----------------------------
-               PROFIT
-            ----------------------------- */
-
-            const profit =
-                (
-                    product.sellingPrice -
-                    product.purchasePrice
-                ) * quantity -
-                discount;
+            let customerId = 0;
 
 
-            /* -----------------------------
-               REDUCE STOCK
-            ----------------------------- */
-
-            product.stock -= quantity;
-
-
-            /* -----------------------------
-               SAVE SALE
-            ----------------------------- */
-
-            sales.unshift({
-
-                id: Date.now(),
-
-                date: today(),
-
-                customer:
-                    customer,
-
-                phone:
-                    phone,
-
-                product:
-                    product.name,
-
-                quantity:
-                    quantity,
-
-                total:
-                    total,
-
-                profit:
-                    profit,
-
-                payment:
-                    payment
-            });
-
-
-            /* -----------------------------
-               RESET FORM
-            ----------------------------- */
-
-            this.reset();
-
-
-            const quantityInput =
-                document.getElementById(
-                    "salesQuantity"
+            const existingCustomer =
+                customers.find(
+                    customer =>
+                        customer.name
+                            .toLowerCase() ===
+                        customerName.toLowerCase()
                 );
 
-            if (quantityInput) {
-                quantityInput.value = 1;
+
+            if (existingCustomer) {
+
+                customerId =
+                    Number(
+                        existingCustomer.id
+                    );
+
+            }
+            else {
+
+                /* =============================================
+                   CREATE CUSTOMER IN MYSQL
+                ============================================= */
+
+                try {
+
+                    const customerResponse =
+                        await fetch(
+                            `${API_BASE}/add_customer.php`,
+                            {
+
+                                method: "POST",
+
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+
+                                body:
+                                    JSON.stringify({
+
+                                        customer_name:
+                                            customerName,
+
+                                        phone:
+                                            phone
+
+                                    })
+
+                            }
+                        );
+
+
+                    const customerResult =
+                        await customerResponse.json();
+
+
+                    if (
+                        !customerResult.success
+                    ) {
+
+                        showToast(
+                            customerResult.message ||
+                            "Could not create customer.",
+                            "error"
+                        );
+
+                        return;
+                    }
+
+
+                    customerId =
+                        Number(
+                            customerResult.customer_id
+                        );
+
+
+                    customers.unshift({
+
+                        id:
+                            customerId,
+
+                        name:
+                            customerName,
+
+                        phone:
+                            phone
+
+                    });
+
+                }
+                catch (error) {
+
+                    console.error(
+                        error
+                    );
+
+
+                    showToast(
+                        "Customer API error.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
             }
 
 
-            const discountInput =
-                document.getElementById(
-                    "salesDiscount"
+            /* =================================================
+               SAVE SALE TO MYSQL
+            ================================================= */
+
+            try {
+
+                const response =
+                    await fetch(
+                        `${API_BASE}/add_sale.php`,
+                        {
+
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify({
+
+                                    customer_id:
+                                        customerId,
+
+                                    product_id:
+                                        productId,
+
+                                    quantity:
+                                        quantity,
+
+                                    discount:
+                                        discount,
+
+                                    payment_method:
+                                        paymentMethod
+
+                                })
+
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                console.log(
+                    "ADD SALE RESPONSE:",
+                    result
                 );
 
-            if (discountInput) {
-                discountInput.value = 0;
+
+                if (!result.success) {
+
+                    showToast(
+                        result.message ||
+                        "Sale could not be saved.",
+                        "error"
+                    );
+
+                    return;
+                }
+
+
+                /* =================================================
+                   SUCCESS
+                ================================================= */
+
+                showToast(
+                    "Sale saved successfully!"
+                );
+
+
+                /* =================================================
+                   RELOAD EVERYTHING FROM MYSQL
+                ================================================= */
+
+                await loadAllDataFromDatabase();
+
+
+                updateAll();
+
+
+                /* =================================================
+                   RESET FORM
+                ================================================= */
+
+                this.reset();
+
+
+                const quantityInput =
+                    document.getElementById(
+                        "salesQuantity"
+                    );
+
+
+                if (quantityInput) {
+
+                    quantityInput.value = 1;
+
+                }
+
+
+                const discountInput =
+                    document.getElementById(
+                        "salesDiscount"
+                    );
+
+
+                if (discountInput) {
+
+                    discountInput.value = 0;
+
+                }
+
+
+                updateSaleCalculation();
+
+            }
+            catch (error) {
+
+                console.error(
+                    "SALE ERROR:",
+                    error
+                );
+
+
+                showToast(
+                    "Could not connect to sale API.",
+                    "error"
+                );
+
             }
 
-
-            updateSaleCalculation();
-
-
-            /* -----------------------------
-               UPDATE SYSTEM
-            ----------------------------- */
-
-            updateAll();
-
-
-            showToast(
-                "Sale completed successfully!"
-            );
         }
     );
 
 
-
 /* =========================================================
-   15. SALES TABLE
+   4. RENDER SALES
 ========================================================= */
 
 function renderSales() {
@@ -456,110 +589,128 @@ function renderSales() {
             "salesTable"
         );
 
+
     if (!table) return;
 
 
     table.innerHTML = "";
 
 
-    if (sales.length === 0) {
+    if (
+        !sales ||
+        sales.length === 0
+    ) {
 
         table.innerHTML = `
+
             <tr>
-                <td colspan="7"
+
+                <td
+                    colspan="7"
                     style="
                         text-align:center;
                         padding:25px;
                         color:#6b7280;
-                    ">
+                    "
+                >
+
                     No sales recorded yet.
+
                 </td>
+
             </tr>
+
         `;
 
         return;
     }
 
 
-    sales.forEach(sale => {
+    sales.forEach(
+        sale => {
 
-        const row =
-            document.createElement("tr");
-
-
-        row.innerHTML = `
-
-            <td>
-                ${sale.date}
-            </td>
+            const row =
+                document.createElement(
+                    "tr"
+                );
 
 
-            <td>
+            row.innerHTML = `
 
-                <strong>
-                    ${sale.customer}
-                </strong>
-
-                ${
-                    sale.phone
-                        ? `
-                            <br>
-                            <small>
-                                ${sale.phone}
-                            </small>
-                          `
-                        : ""
-                }
-
-            </td>
+                <td>
+                    ${sale.date}
+                </td>
 
 
-            <td>
-                ${sale.product}
-            </td>
+                <td>
+
+                    <strong>
+                        ${sale.customer}
+                    </strong>
+
+                    ${
+                        sale.phone
+                            ? `
+                                <br>
+                                <small>
+                                    ${sale.phone}
+                                </small>
+                              `
+                            : ""
+                    }
+
+                </td>
 
 
-            <td>
-                ${sale.quantity}
-            </td>
+                <td>
+                    ${sale.product}
+                </td>
 
 
-            <td>
-
-                <strong>
-                    ${money(sale.total)}
-                </strong>
-
-            </td>
+                <td>
+                    ${sale.quantity}
+                </td>
 
 
-            <td>
-
-                <span class="positive">
-                    ${money(sale.profit)}
-                </span>
-
-            </td>
+                <td>
+                    <strong>
+                        ${money(sale.total)}
+                    </strong>
+                </td>
 
 
-            <td>
+                <td>
 
-                <span class="status good">
-                    ${sale.payment}
-                </span>
+                    <span class="positive">
+                        ${money(sale.profit)}
+                    </span>
 
-            </td>
-
-        `;
+                </td>
 
 
-        table.appendChild(row);
-    });
+                <td>
+
+                    <span class="status good">
+                        ${sale.payment}
+                    </span>
+
+                </td>
+
+            `;
+
+
+            table.appendChild(
+                row
+            );
+
+        }
+    );
+
 }
 
 
 /* =========================================================
-   CLEAR SALES
+   5. CLEAR SALES
 ========================================================= */
 
 function clearSales() {
@@ -569,19 +720,14 @@ function clearSales() {
             "Are you sure you want to clear sales history?"
         )
     ) {
+
         return;
+
     }
 
 
-    sales = [];
-
-
-    updateAll();
-
-
     showToast(
-        "Sales history cleared."
+        "Sales are stored in MySQL and cannot be cleared from the browser."
     );
+
 }
-
-

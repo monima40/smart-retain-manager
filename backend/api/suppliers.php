@@ -16,21 +16,26 @@ $sql = "SELECT
 $result = $conn->query($sql);
 
 if (!$result) {
+
     echo json_encode([
         "success" => false,
         "message" => $conn->error
     ]);
+
     exit;
 }
 
 $suppliers = [];
 
 while ($row = $result->fetch_assoc()) {
+
     $suppliers[] = $row;
+
 }
 
 echo json_encode([
     "success" => true,
     "data" => $suppliers
 ]);
+
 ?>

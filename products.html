@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,23 +13,23 @@
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="css/pages.css">
-    <link rel="stylesheet" href="css/pages.css">
 
-    <script src="js/auth.js"></script>   <!-- ADD THIS LINE -->
+    <!-- Authentication -->
+    <script src="js/auth.js"></script>
 
-    <!-- Icons -->
-    <link rel="stylesheet" href="...">
-    <!-- Icons -->
+    <!-- Font Awesome -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body>
+
 <!-- ================= SIDEBAR ================= -->
 
 <aside class="sidebar">
 
     <div class="logo">
+
         <div class="logo-icon">
             <i class="fa-solid fa-store"></i>
         </div>
@@ -37,6 +38,7 @@
             <h2>Smart Retail</h2>
             <span>Business Manager</span>
         </div>
+
     </div>
 
 
@@ -44,45 +46,85 @@
 
         <p class="menu-title">MAIN MENU</p>
 
-        <a href="dashboard.html" class="nav-link" data-page="dashboard">
+        <a href="dashboard.html"
+           class="nav-link"
+           data-page="dashboard">
+
             <i class="fa-solid fa-chart-pie"></i>
             <span>Dashboard</span>
+
         </a>
 
-        <a href="products.html" class="nav-link active" data-page="products">
+
+        <a href="products.html"
+           class="nav-link active"
+           data-page="products">
+
             <i class="fa-solid fa-box"></i>
             <span>Products</span>
+
         </a>
 
-        <a href="categories.html" class="nav-link" data-page="categories">
+
+        <a href="categories.html"
+           class="nav-link"
+           data-page="categories">
+
             <i class="fa-solid fa-layer-group"></i>
             <span>Categories</span>
+
         </a>
 
-        <a href="suppliers.html" class="nav-link" data-page="suppliers">
+
+        <a href="suppliers.html"
+           class="nav-link"
+           data-page="suppliers">
+
             <i class="fa-solid fa-truck"></i>
             <span>Suppliers</span>
+
         </a>
 
-        <a href="purchase.html" class="nav-link" data-page="purchase">
+
+        <a href="purchase.html"
+           class="nav-link"
+           data-page="purchase">
+
             <i class="fa-solid fa-cart-shopping"></i>
             <span>Purchase</span>
+
         </a>
 
-        <a href="sales.html" class="nav-link" data-page="sales">
+
+        <a href="sales.html"
+           class="nav-link"
+           data-page="sales">
+
             <i class="fa-solid fa-cash-register"></i>
             <span>Sells</span>
+
         </a>
 
-        <a href="reports.html" class="nav-link" data-page="reports">
+
+        <a href="reports.html"
+           class="nav-link"
+           data-page="reports">
+
             <i class="fa-solid fa-chart-line"></i>
             <span>Reports</span>
+
         </a>
 
-        <a href="settings.html" class="nav-link" data-page="settings">
+
+        <a href="settings.html"
+           class="nav-link"
+           data-page="settings">
+
             <i class="fa-solid fa-gear"></i>
             <span>Settings</span>
+
         </a>
+
 
         <p class="menu-title">TRANSACTIONS</p>
 
@@ -94,26 +136,47 @@
     <div class="sidebar-bottom">
 
         <div class="help-box">
+
             <i class="fa-solid fa-lightbulb"></i>
 
             <div>
+
                 <strong>Business Tip</strong>
-                <p>Keep your stock updated to avoid shortages.</p>
+
+                <p>
+                    Keep your stock updated to avoid shortages.
+                </p>
+
             </div>
+
         </div>
 
-        <div class="user-profile">
-<div class="avatar" id="adminAvatar">
-    A
-</div>
-            <div>
-                <strong id="sidebarAdminName">Admin</strong>
 
-                <small>Business Owner</small>
+        <div class="user-profile">
+
+            <div class="avatar" id="adminAvatar">
+                A
             </div>
 
-            <!-- <i class="fa-solid fa-ellipsis"></i> -->
-     <i class="fa-solid fa-right-from-bracket" style="cursor:pointer" onclick="logout()" title="Log out"></i>
+            <div>
+
+                <strong id="sidebarAdminName">
+                    Admin
+                </strong>
+
+                <small>
+                    Business Owner
+                </small>
+
+            </div>
+
+
+            <i class="fa-solid fa-right-from-bracket"
+               style="cursor:pointer"
+               onclick="logout()"
+               title="Log out">
+            </i>
+
         </div>
 
     </div>
@@ -125,6 +188,7 @@
 
 <main class="main-content">
 
+
     <!-- HEADER -->
 
     <header class="top-header">
@@ -133,9 +197,12 @@
             <i class="fa-solid fa-bars"></i>
         </div>
 
+
         <div class="page-heading">
 
-            <h1 id="page-title">Products</h1>
+            <h1 id="page-title">
+                Products
+            </h1>
 
             <p id="page-subtitle">
                 Manage your products and stock.
@@ -183,17 +250,23 @@
 
         <div class="page" id="products-page">
 
+
+            <!-- SECTION HEADER -->
+
             <div class="section-header">
 
                 <div>
 
-                    <h2>Products</h2>
+                    <h2>
+                        Products
+                    </h2>
 
                     <p>
                         Manage your products and stock.
                     </p>
 
                 </div>
+
 
                 <button
                     class="primary-btn"
@@ -209,11 +282,16 @@
             </div>
 
 
+            <!-- SUMMARY -->
+
             <div class="summary-grid">
+
 
                 <div class="mini-card">
 
-                    <span>Total Products</span>
+                    <span>
+                        Total Products
+                    </span>
 
                     <strong id="productCount">
                         0
@@ -221,9 +299,12 @@
 
                 </div>
 
+
                 <div class="mini-card">
 
-                    <span>Total Stock</span>
+                    <span>
+                        Total Stock
+                    </span>
 
                     <strong id="totalStock">
                         0
@@ -231,9 +312,12 @@
 
                 </div>
 
+
                 <div class="mini-card warning-mini">
 
-                    <span>Low Stock</span>
+                    <span>
+                        Low Stock
+                    </span>
 
                     <strong id="productLowStock">
                         0
@@ -244,11 +328,16 @@
             </div>
 
 
+            <!-- PRODUCT TABLE -->
+
             <div class="table-card">
 
                 <div class="table-top">
 
-                    <h3>Product List</h3>
+                    <h3>
+                        Product List
+                    </h3>
+
 
                     <div class="table-search">
 
@@ -258,7 +347,6 @@
                             type="text"
                             id="productSearch"
                             placeholder="Search products..."
-                            onkeyup="renderProducts()"
                         >
 
                     </div>
@@ -274,19 +362,42 @@
 
                             <tr>
 
-                                <th>Product</th>
-                                <th>Category</th>
-                                <th>Purchase Price</th>
-                                <th>Selling Price</th>
-                                <th>Stock</th>
-                                <th>Status</th>
-                                <th>Action</th>
+                                <th>
+                                    Product
+                                </th>
+
+                                <th>
+                                    Category
+                                </th>
+
+                                <th>
+                                    Purchase Price
+                                </th>
+
+                                <th>
+                                    Selling Price
+                                </th>
+
+                                <th>
+                                    Stock
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th>
+                                    Action
+                                </th>
 
                             </tr>
 
                         </thead>
 
-                        <tbody id="productsTable"></tbody>
+
+                        <tbody id="productsTable">
+
+                        </tbody>
 
                     </table>
 
@@ -296,143 +407,220 @@
 
         </div>
 
-<div class="modal" id="productModal">
 
-    <div class="modal-content">
+        <!-- ================= ADD PRODUCT MODAL ================= -->
 
-        <div class="modal-header">
+        <div class="modal"
+             id="productModal">
 
-            <div>
+            <div class="modal-content">
 
-                <h3>Add New Product</h3>
 
-                <p>Add a product to your inventory.</p>
+                <!-- MODAL HEADER -->
+
+                <div class="modal-header">
+
+                    <div>
+
+                        <h3>
+                            Add New Product
+                        </h3>
+
+                        <p>
+                            Add a product to your inventory.
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="close-modal"
+                        onclick="closeModal('productModal')"
+                    >
+
+                        <i class="fa-solid fa-xmark"></i>
+
+                    </button>
+
+                </div>
+
+
+                <!-- PRODUCT FORM -->
+
+                <form id="productForm">
+
+
+                    <!-- PRODUCT NAME -->
+
+                    <div class="form-group">
+
+                        <label for="productName">
+                            Product Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="productName"
+                            name="product_name"
+                            placeholder="Enter product name"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- CATEGORY -->
+
+                    <div class="form-group">
+
+                        <label for="productCategory">
+                            Category
+                        </label>
+
+                        <select
+                            id="productCategory"
+                            name="category_id"
+                            required
+                        >
+
+                            <option value="">
+                                Select Category
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- PRICES -->
+
+                    <div class="form-row">
+
+
+                        <div class="form-group">
+
+                            <label for="productPurchasePrice">
+                                Purchase Price
+                            </label>
+
+                            <input
+                                type="number"
+                                id="productPurchasePrice"
+                                name="purchase_price"
+                                min="0"
+                                step="0.01"
+                                placeholder="0.00"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="productSellingPrice">
+                                Selling Price
+                            </label>
+
+                            <input
+                                type="number"
+                                id="productSellingPrice"
+                                name="selling_price"
+                                min="0"
+                                step="0.01"
+                                placeholder="0.00"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- STOCK -->
+
+                    <div class="form-row">
+
+
+                        <div class="form-group">
+
+                            <label for="productStock">
+                                Stock Quantity
+                            </label>
+
+                            <input
+                                type="number"
+                                id="productStock"
+                                name="stock_quantity"
+                                min="0"
+                                value="0"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="productMinimumStock">
+                                Minimum Stock
+                            </label>
+
+                            <input
+                                type="number"
+                                id="productMinimumStock"
+                                name="low_stock_limit"
+                                min="0"
+                                value="5"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ACTION BUTTONS -->
+
+                    <div class="modal-actions">
+
+                        <button
+                            type="button"
+                            class="outline-btn"
+                            onclick="closeModal('productModal')"
+                        >
+
+                            Cancel
+
+                        </button>
+
+
+                        <button
+                            type="submit"
+                            class="primary-btn"
+                        >
+
+                            <i class="fa-solid fa-plus"></i>
+
+                            Add Product
+
+                        </button>
+
+                    </div>
+
+                </form>
 
             </div>
-
-            <button
-                class="close-modal"
-                onclick="closeModal('productModal')"
-            >
-                
-            </button>
 
         </div>
-
-
-        <form id="productForm">
-
-            <div class="form-group">
-
-                <label>Product Name</label>
-
-                <input
-                    type="text"
-                    id="productName"
-                    placeholder="e.g. Rice 5kg"
-                    required
-                >
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label>Category</label>
-
-                <select id="productCategory" required></select>
-
-            </div>
-
-
-            <div class="form-row">
-
-                <div class="form-group">
-
-                    <label>Purchase Price</label>
-
-                    <input
-                        type="number"
-                        id="productPurchasePrice"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>Selling Price</label>
-
-                    <input
-                        type="number"
-                        id="productSellingPrice"
-                        required
-                    >
-
-                </div>
-
-            </div>
-
-
-            <div class="form-row">
-
-                <div class="form-group">
-
-                    <label>Stock Quantity</label>
-
-                    <input
-                        type="number"
-                        id="productStock"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>Minimum Stock</label>
-
-                    <input
-                        type="number"
-                        id="productMinimumStock"
-                        value="5"
-                        required
-                    >
-
-                </div>
-
-            </div>
-
-
-            <div class="modal-actions">
-
-                <button
-                    type="button"
-                    class="outline-btn"
-                    onclick="closeModal('productModal')"
-                >
-                    Cancel
-                </button>
-
-                <button class="primary-btn">
-                    Add Product
-                </button>
-
-            </div>
-
-        </form>
-
-    </div>
-
-</div>
 
     </section>
 
 </main>
 
-<!-- JAVASCRIPT -->
+
+<!-- ================= JAVASCRIPT ================= -->
 
 <script src="js/data.js"></script>
 <script src="js/navigation.js"></script>
