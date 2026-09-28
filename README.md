@@ -135,4 +135,4 @@ This project needs no `npm` packages or build tools. The only external dependenc
 
 ## 👩‍💻 Author
 
-**Your Name** – [GitHub](https://github.com/monima40)
+**Nushrath Jahan Monima** – [GitHub](https://github.com/monima40)
