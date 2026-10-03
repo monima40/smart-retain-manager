@@ -1,29 +1,28 @@
 /* =========================================================
-   16. BUSINESS DATA
+   DASHBOARD.JS
+   Smart Retail Business Manager
+   MySQL Dashboard
+========================================================= */
+
+
+/* =========================================================
+   1. CALCULATE BUSINESS DATA
 ========================================================= */
 
 function calculateBusinessData() {
 
-    const revenue =
-        sales.reduce(
-            (sum, sale) =>
-                sum +
-                Number(
-                    sale.total || 0
-                ),
-            0
-        );
+    const revenue = sales.reduce(
+        (sum, sale) =>
+            sum + Number(sale.total || 0),
+        0
+    );
 
 
-    const profit =
-        sales.reduce(
-            (sum, sale) =>
-                sum +
-                Number(
-                    sale.profit || 0
-                ),
-            0
-        );
+    const profit = sales.reduce(
+        (sum, sale) =>
+            sum + Number(sale.profit || 0),
+        0
+    );
 
 
     const margin =
@@ -32,12 +31,11 @@ function calculateBusinessData() {
             : 0;
 
 
-    const lowStock =
-        products.filter(
-            product =>
-                Number(product.stock) <=
-                Number(product.minimumStock)
-        );
+    const lowStock = products.filter(
+        product =>
+            Number(product.stock) <=
+            Number(product.minimumStock)
+    );
 
 
     return {
@@ -46,12 +44,12 @@ function calculateBusinessData() {
         margin,
         lowStock
     };
+
 }
 
 
-
 /* =========================================================
-   17. DASHBOARD
+   2. UPDATE DASHBOARD
 ========================================================= */
 
 function updateDashboard() {
@@ -60,27 +58,13 @@ function updateDashboard() {
         calculateBusinessData();
 
 
+    /* =====================================================
+       TOTAL SALES
+    ===================================================== */
+
     const dashboardSales =
         document.getElementById(
             "dashboardSales"
-        );
-
-
-    const dashboardProfit =
-        document.getElementById(
-            "dashboardProfit"
-        );
-
-
-    const dashboardProducts =
-        document.getElementById(
-            "dashboardProducts"
-        );
-
-
-    const dashboardLowStock =
-        document.getElementById(
-            "dashboardLowStock"
         );
 
 
@@ -88,33 +72,67 @@ function updateDashboard() {
 
         dashboardSales.textContent =
             money(data.revenue);
+
     }
+
+
+    /* =====================================================
+       TOTAL PROFIT
+    ===================================================== */
+
+    const dashboardProfit =
+        document.getElementById(
+            "dashboardProfit"
+        );
 
 
     if (dashboardProfit) {
 
         dashboardProfit.textContent =
             money(data.profit);
+
     }
+
+
+    /* =====================================================
+       TOTAL PRODUCTS
+    ===================================================== */
+
+    const dashboardProducts =
+        document.getElementById(
+            "dashboardProducts"
+        );
 
 
     if (dashboardProducts) {
 
         dashboardProducts.textContent =
             products.length;
+
     }
+
+
+    /* =====================================================
+       LOW STOCK
+    ===================================================== */
+
+    const dashboardLowStock =
+        document.getElementById(
+            "dashboardLowStock"
+        );
 
 
     if (dashboardLowStock) {
 
         dashboardLowStock.textContent =
             data.lowStock.length;
+
     }
 
 
-    /* -----------------------------
+    /* =====================================================
        PROFIT MARGIN
-    ----------------------------- */
+    ===================================================== */
 
     const margin =
         document.getElementById(
@@ -122,11 +140,35 @@ function updateDashboard() {
         );
 
 
+    if (margin) {
+
+        margin.textContent =
+            data.margin.toFixed(1) + "%";
+
+    }
+
+
+    /* =====================================================
+       REVENUE
+    ===================================================== */
+
     const marginRevenue =
         document.getElementById(
             "marginRevenue"
         );
 
+
+    if (marginRevenue) {
+
+        marginRevenue.textContent =
+            money(data.revenue);
+
+    }
+
+
+    /* =====================================================
+       PROFIT
+    ===================================================== */
 
     const marginProfit =
         document.getElementById(
@@ -134,30 +176,17 @@ function updateDashboard() {
         );
 
 
-    if (margin) {
-
-        margin.textContent =
-            data.margin.toFixed(1) + "%";
-    }
-
-
-    if (marginRevenue) {
-
-        marginRevenue.textContent =
-            money(data.revenue);
-    }
-
-
     if (marginProfit) {
 
         marginProfit.textContent =
             money(data.profit);
+
     }
 
 
-    /* -----------------------------
+    /* =====================================================
        PROFIT CIRCLE
-    ----------------------------- */
+    ===================================================== */
 
     const circle =
         document.querySelector(
@@ -177,27 +206,37 @@ function updateDashboard() {
             );
 
 
-        circle.style.background = `
+        circle.style.background =
+            `
             conic-gradient(
                 var(--primary)
                 ${degree}deg,
                 #ede9fe
                 ${degree}deg
             )
-        `;
+            `;
+
     }
 
+
+    /* =====================================================
+       LOW STOCK LIST
+    ===================================================== */
 
     renderLowStock();
 
 
-    calculateBreakEven();
+    /* =====================================================
+       BUSINESS PERFORMANCE
+    ===================================================== */
+
+    updateBusinessPerformance();
+
 }
 
 
-
 /* =========================================================
-   18. LOW STOCK ALERT
+   3. LOW STOCK ALERT
 ========================================================= */
 
 function renderLowStock() {
@@ -208,7 +247,9 @@ function renderLowStock() {
         );
 
 
-    if (!container) return;
+    if (!container) {
+        return;
+    }
 
 
     const lowProducts =
@@ -221,6 +262,10 @@ function renderLowStock() {
 
     container.innerHTML = "";
 
+
+    /* =====================================================
+       NO LOW STOCK
+    ===================================================== */
 
     if (lowProducts.length === 0) {
 
@@ -245,10 +290,16 @@ function renderLowStock() {
     }
 
 
+    /* =====================================================
+       LOW STOCK PRODUCTS
+    ===================================================== */
+
     lowProducts.forEach(product => {
 
         const item =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
 
         item.className =
@@ -291,7 +342,232 @@ function renderLowStock() {
 
 
         container.appendChild(item);
+
     });
+
 }
 
 
+/* =========================================================
+   4. BUSINESS PERFORMANCE
+========================================================= */
+
+function updateBusinessPerformance() {
+
+    const performanceSales =
+        document.getElementById(
+            "performanceSales"
+        );
+
+
+    const performanceProgress =
+        document.getElementById(
+            "performanceProgress"
+        );
+
+
+    const performanceText =
+        document.getElementById(
+            "performanceText"
+        );
+
+
+    const data =
+        calculateBusinessData();
+
+
+    if (performanceSales) {
+
+        performanceSales.textContent =
+            money(data.revenue);
+
+    }
+
+
+    /*
+       Simple progress indicator.
+
+       It is not a mathematical break-even
+       calculation because the database does
+       not contain fixed-cost information.
+    */
+
+    const target = 100000;
+
+
+    const progress =
+        Math.min(
+            100,
+            (data.revenue / target) * 100
+        );
+
+
+    if (performanceProgress) {
+
+        performanceProgress.style.width =
+            progress + "%";
+
+    }
+
+
+    if (performanceText) {
+
+        if (data.revenue === 0) {
+
+            performanceText.textContent =
+                "Add sales to see your business progress.";
+
+        } else {
+
+            performanceText.textContent =
+                `${progress.toFixed(0)}% of ৳ 100,000 sales target reached.`;
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   5. SALES PERIOD
+========================================================= */
+
+function filterDashboardSales(period) {
+
+    if (!sales || sales.length === 0) {
+
+        return [];
+
+    }
+
+
+    const now =
+        new Date();
+
+
+    return sales.filter(sale => {
+
+        if (!sale.date) {
+            return false;
+        }
+
+
+        const saleDate =
+            new Date(
+                sale.date
+            );
+
+
+        if (isNaN(saleDate)) {
+            return false;
+        }
+
+
+        if (period === "month") {
+
+            return (
+                saleDate.getMonth() ===
+                now.getMonth()
+                &&
+                saleDate.getFullYear() ===
+                now.getFullYear()
+            );
+
+        }
+
+
+        if (period === "year") {
+
+            return (
+                saleDate.getFullYear() ===
+                now.getFullYear()
+            );
+
+        }
+
+
+        return true;
+
+    });
+
+}
+
+
+/* =========================================================
+   6. SALES PERIOD EVENT
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const salesPeriod =
+            document.getElementById(
+                "salesPeriod"
+            );
+
+
+        if (!salesPeriod) {
+            return;
+        }
+
+
+        salesPeriod.addEventListener(
+            "change",
+            function () {
+
+                const selected =
+                    this.value;
+
+
+                const filtered =
+                    filterDashboardSales(
+                        selected
+                    );
+
+
+                const revenue =
+                    filtered.reduce(
+                        (sum, sale) =>
+                            sum +
+                            Number(
+                                sale.total || 0
+                            ),
+                        0
+                    );
+
+
+                const profit =
+                    filtered.reduce(
+                        (sum, sale) =>
+                            sum +
+                            Number(
+                                sale.profit || 0
+                            ),
+                        0
+                    );
+
+
+                console.log(
+                    "Selected sales period:",
+                    selected
+                );
+
+
+                console.log(
+                    "Revenue:",
+                    revenue
+                );
+
+
+                console.log(
+                    "Profit:",
+                    profit
+                );
+
+            }
+        );
+
+    }
+);

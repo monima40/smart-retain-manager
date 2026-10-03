@@ -1,190 +1,357 @@
 /* =========================================================
-   25. GLOBAL SEARCH
+   SEARCH.JS
+   Smart Retail Business Manager
+   GLOBAL HEADER SEARCH
 ========================================================= */
 
-const globalSearch =
-    document.getElementById(
-        "globalSearch"
-    );
+document.addEventListener("DOMContentLoaded", function () {
 
+    const globalSearch =
+        document.getElementById("globalSearch");
 
-function performGlobalSearch(
-    keyword
-) {
-
-    keyword =
-        keyword
-            .toLowerCase()
-            .trim();
-
-
-    if (!keyword) {
-
-        showToast(
-            "Type something to search."
-        );
-
+    if (!globalSearch) {
+        console.log("globalSearch not found.");
         return;
     }
 
+    console.log("Global search connected.");
 
-    /* -----------------------------
-       SEARCH PRODUCT
-    ----------------------------- */
+    globalSearch.addEventListener("input", function () {
 
-    const product =
-        products.find(
-            p =>
-                p.name
-                    .toLowerCase()
-                    .includes(keyword) ||
+        const text =
+            this.value.trim().toLowerCase();
 
-                p.category
-                    .toLowerCase()
-                    .includes(keyword)
-        );
+        console.log("Global search:", text);
 
 
-    if (product) {
+        /* =================================================
+           PRODUCTS
+        ================================================= */
 
-        showPage(
-            "products"
-        );
+        const productTable =
+            document.getElementById("productsTable");
 
+        if (productTable) {
 
-        const productSearch =
-            document.getElementById(
-                "productSearch"
-            );
+            const productSearch =
+                document.getElementById("productSearch");
 
+            if (productSearch) {
 
-        if (productSearch) {
+                productSearch.value = text;
 
-            productSearch.value =
-                keyword;
+                productSearch.dispatchEvent(
+                    new Event("input")
+                );
+
+            }
+
+            return;
         }
 
 
-        renderProducts();
+        /* =================================================
+           SUPPLIERS
+        ================================================= */
 
+        const supplierList =
+            document.getElementById("supplierList");
+
+        if (supplierList) {
+
+            searchSupplierList(text);
+
+            return;
+        }
+
+
+        /* =================================================
+           CATEGORIES
+        ================================================= */
+
+        const categoryList =
+            document.getElementById("categoryList");
+
+        if (categoryList) {
+
+            searchCategoryList(text);
+
+            return;
+        }
+
+
+        /* =================================================
+           OTHER PAGES
+        ================================================= */
+
+        console.log(
+            "Global search is not configured for this page."
+        );
+
+    });
+
+});
+
+
+/* =========================================================
+   SUPPLIER SEARCH
+========================================================= */
+
+function searchSupplierList(text) {
+
+    const container =
+        document.getElementById("supplierList");
+
+    if (!container) return;
+
+
+    /* Empty search = show all */
+
+    if (text === "") {
+
+        if (
+            typeof renderSuppliers ===
+            "function"
+        ) {
+
+            renderSuppliers();
+
+        }
 
         return;
     }
 
 
-    /* -----------------------------
-       SEARCH CATEGORY
-    ----------------------------- */
+    const result =
+        suppliers.filter(function (supplier) {
 
-    const category =
-        categories.find(
-            c =>
-                c.name
-                    .toLowerCase()
-                    .includes(keyword)
-        );
+            const name =
+                String(
+                    supplier.name || ""
+                ).toLowerCase();
 
+            const phone =
+                String(
+                    supplier.phone || ""
+                ).toLowerCase();
 
-    if (category) {
+            const email =
+                String(
+                    supplier.email || ""
+                ).toLowerCase();
 
-        showPage(
-            "categories"
-        );
-
-        return;
-    }
-
-
-    /* -----------------------------
-       SEARCH SUPPLIER
-    ----------------------------- */
-
-    const supplier =
-        suppliers.find(
-            s =>
-                s.name
-                    .toLowerCase()
-                    .includes(keyword) ||
-
-                s.phone
-                    .includes(keyword)
-        );
+            const address =
+                String(
+                    supplier.address || ""
+                ).toLowerCase();
 
 
-    if (supplier) {
+            return (
+                name.includes(text) ||
+                phone.includes(text) ||
+                email.includes(text) ||
+                address.includes(text)
+            );
 
-        showPage(
-            "suppliers"
-        );
-
-        return;
-    }
-
-
-    /* -----------------------------
-       SEARCH SALES
-    ----------------------------- */
-
-    const sale =
-        sales.find(
-            s =>
-                s.customer
-                    .toLowerCase()
-                    .includes(keyword) ||
-
-                s.product
-                    .toLowerCase()
-                    .includes(keyword)
-        );
+        });
 
 
-    if (sale) {
+    container.innerHTML = "";
 
-        showPage(
-            "sales"
-        );
+
+    if (result.length === 0) {
+
+        container.innerHTML = `
+            <div style="
+                grid-column: 1 / -1;
+                width: 100%;
+                padding: 30px;
+                text-align: center;
+                color: #6b7280;
+            ">
+                No suppliers found.
+            </div>
+        `;
 
         return;
     }
 
 
-    showToast(
-        "No matching result found.",
-        "error"
-    );
+    result.forEach(function (supplier) {
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "supplier-card";
+
+
+        const name =
+            supplier.name ||
+            "Unknown Supplier";
+
+
+        const firstLetter =
+            name.charAt(0).toUpperCase();
+
+
+        card.innerHTML = `
+
+            <div class="supplier-top">
+
+                <div class="supplier-avatar">
+                    ${firstLetter}
+                </div>
+
+                <div>
+
+                    <h3>
+                        ${name}
+                    </h3>
+
+                    <span>
+                        Supplier
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="supplier-info">
+
+                <p>
+                    <i class="fa-solid fa-phone"></i>
+                    ${supplier.phone || "No phone"}
+                </p>
+
+                <p>
+                    <i class="fa-solid fa-envelope"></i>
+                    ${supplier.email || "No email"}
+                </p>
+
+                <p>
+                    <i class="fa-solid fa-location-dot"></i>
+                    ${supplier.address || "No address"}
+                </p>
+
+            </div>
+
+        `;
+
+
+        container.appendChild(card);
+
+    });
+
 }
 
 
-/* Search using ENTER */
+/* =========================================================
+   CATEGORY SEARCH
+========================================================= */
 
-globalSearch?.addEventListener(
-    "keydown",
-    function (e) {
+function searchCategoryList(text) {
 
-        if (e.key === "Enter") {
+    const container =
+        document.getElementById("categoryList");
 
-            performGlobalSearch(
-                this.value
-            );
+    if (!container) return;
+
+
+    /* Empty search = show all */
+
+    if (text === "") {
+
+        if (
+            typeof renderCategories ===
+            "function"
+        ) {
+
+            renderCategories();
+
         }
+
+        return;
     }
-);
 
 
-/* Search using search icon */
+    const result =
+        categories.filter(function (category) {
 
-document
-    .querySelector(
-        ".search-box i"
-    )
-    ?.addEventListener(
-        "click",
-        function () {
+            const name =
+                String(
+                    category.name || ""
+                ).toLowerCase();
 
-            performGlobalSearch(
-                globalSearch?.value || ""
-            );
-        }
-    );
+            return name.includes(text);
+
+        });
 
 
+    container.innerHTML = "";
+
+
+    if (result.length === 0) {
+
+        container.innerHTML = `
+            <div style="
+                grid-column: 1 / -1;
+                width: 100%;
+                padding: 30px;
+                text-align: center;
+                color: #6b7280;
+            ">
+                No categories found.
+            </div>
+        `;
+
+        return;
+    }
+
+
+    result.forEach(function (category) {
+
+        const count =
+            products.filter(function (product) {
+
+                return (
+                    product.category ===
+                    category.name
+                );
+
+            }).length;
+
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "category-card";
+
+
+        card.innerHTML = `
+
+            <div class="category-icon">
+
+                <i class="fa-solid fa-layer-group"></i>
+
+            </div>
+
+            <h3>
+                ${category.name}
+            </h3>
+
+            <p>
+                ${count}
+                product${count !== 1 ? "s" : ""}
+            </p>
+
+        `;
+
+
+        container.appendChild(card);
+
+    });
+
+}
